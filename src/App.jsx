@@ -1,70 +1,109 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goods = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
+  ['Dumplings', 0],
+  ['Carrot', 1],
+  ['Eggs', 2],
+  ['Ice cream', 3],
+  ['Apple', 4],
+  ['Bread', 5],
+  ['Fish', 6],
+  ['Honey', 7],
+  ['Jam', 8],
+  ['Garlic', 9],
 ];
 
-export const App = () => (
-  <main className="section container">
-    <h1 className="title is-flex is-align-items-center">No goods selected</h1>
+export const App = () => {
+  let [selected, setSelected] = useState('Jam');
 
-    <h1 className="title is-flex is-align-items-center">
-      Jam is selected
-      <button data-cy="ClearButton" type="button" className="delete ml-3" />
-    </h1>
+  function change(good) {
+    const cleanButton = document.querySelector('.ml-3');
 
-    <table className="table">
-      <tbody>
-        <tr data-cy="Good">
-          <td>
-            <button data-cy="AddButton" type="button" className="button">
-              +
-            </button>
-          </td>
+    if (selected === good) {
+      setSelected('');
+    } else {
+      setSelected(good);
+    }
 
-          <td data-cy="GoodTitle" className="is-vcentered">
-            Dumplings
-          </td>
-        </tr>
+    if (!selected) {
+      cleanButton.setAttribute('hidden', '');
+    } else if (cleanButton.hasAttribute('hidden') && selected) {
+      cleanButton.removeAttribute('hidden');
+    }
+  }
 
-        <tr data-cy="Good" className="has-background-success-light">
-          <td>
-            <button
-              data-cy="RemoveButton"
-              type="button"
-              className="button is-info"
-            >
-              -
-            </button>
-          </td>
+  return (
+    <main className="section container">
+      <h1 className="title is-flex is-align-items-center">
+        {selected ? (
+          `${selected} is selected`
+        ) : (
+          'No goods selected'
+        )}
 
-          <td data-cy="GoodTitle" className="is-vcentered">
-            Jam
-          </td>
-        </tr>
+        {selected ? (
+          <button
+            data-cy="ClearButton"
+            type="button"
+            className="delete ml-3"
+            onClick={() => change('')}
+          />
+        ) : (
+          ''
+        )}
+      </h1>
 
-        <tr data-cy="Good">
-          <td>
-            <button data-cy="AddButton" type="button" className="button">
-              +
-            </button>
-          </td>
+      <table className="table">
+        <tbody>
+          {goods.map(([good, i]) => {
+            if (good === selected) {
+              return (
+                <tr
+                  data-cy="Good"
+                  className="has-background-success-light"
+                  key={i}
+                >
+                  <td>
+                    <button
+                      data-cy="RemoveButton"
+                      type="button"
+                      className="button is-info"
+                      onClick={() => change(good)}
+                    >
+                      -
+                    </button>
+                  </td>
 
-          <td data-cy="GoodTitle" className="is-vcentered">
-            Garlic
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </main>
-);
+                  <td data-cy="GoodTitle" className="is-vcentered">
+                    {good}
+                  </td>
+                </tr>
+              );
+            }
+
+            return (
+              <tr data-cy="Good" key={i}>
+                <td>
+                  <button
+                    data-cy="AddButton"
+                    type="button"
+                    className="button"
+                    onClick={() => setSelected(good)}
+                  >
+                    +
+                  </button>
+                </td>
+
+                <td data-cy="GoodTitle" className="is-vcentered">
+                  {good}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </main>
+  );
+};
