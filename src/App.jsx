@@ -3,20 +3,22 @@ import './App.scss';
 import { useState } from 'react';
 
 export const goods = [
-  ['Dumplings', 0],
-  ['Carrot', 1],
-  ['Eggs', 2],
-  ['Ice cream', 3],
-  ['Apple', 4],
-  ['Bread', 5],
-  ['Fish', 6],
-  ['Honey', 7],
-  ['Jam', 8],
-  ['Garlic', 9],
+  'Dumplings',
+  'Carrot',
+  'Eggs',
+  'Ice cream',
+  'Apple',
+  'Bread',
+  'Fish',
+  'Honey',
+  'Jam',
+  'Garlic',
 ];
 
 export const App = () => {
   const [selectedGood, setSelectedGood] = useState('Jam');
+  const handlerClean = () => setSelectedGood('');
+  const handlerSet = good => setSelectedGood(good);
 
   return (
     <main className="section container">
@@ -28,7 +30,7 @@ export const App = () => {
             data-cy="ClearButton"
             type="button"
             className="delete ml-3"
-            onClick={() => setSelectedGood('')}
+            onClick={() => handlerClean()}
           />
         ) : (
           ''
@@ -37,20 +39,20 @@ export const App = () => {
 
       <table className="table">
         <tbody>
-          {goods.map(([good, i]) => {
+          {goods.map(good => {
             if (good === selectedGood) {
               return (
                 <tr
                   data-cy="Good"
                   className="has-background-success-light"
-                  key={i}
+                  key={good}
                 >
                   <td>
                     <button
                       data-cy="RemoveButton"
                       type="button"
                       className="button is-info"
-                      onClick={() => setSelectedGood('')}
+                      onClick={() => handlerClean()}
                     >
                       -
                     </button>
@@ -61,26 +63,26 @@ export const App = () => {
                   </td>
                 </tr>
               );
+            } else {
+              return (
+                <tr data-cy="Good" key={good}>
+                  <td>
+                    <button
+                      data-cy="AddButton"
+                      type="button"
+                      className="button"
+                      onClick={() => handlerSet(good)}
+                    >
+                      +
+                    </button>
+                  </td>
+
+                  <td data-cy="GoodTitle" className="is-vcentered">
+                    {good}
+                  </td>
+                </tr>
+              );
             }
-
-            return (
-              <tr data-cy="Good" key={i}>
-                <td>
-                  <button
-                    data-cy="AddButton"
-                    type="button"
-                    className="button"
-                    onClick={() => setSelectedGood(good)}
-                  >
-                    +
-                  </button>
-                </td>
-
-                <td data-cy="GoodTitle" className="is-vcentered">
-                  {good}
-                </td>
-              </tr>
-            );
           })}
         </tbody>
       </table>
